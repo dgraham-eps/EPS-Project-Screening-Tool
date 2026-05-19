@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enginuity Power Systems | CHP Fit Screening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   BRAND TOKENS
+   ============================================================ */
+:root {
+  /* Core palette */
+  --primary:        #1A1D22;     /* near-black anchor */
+  --primary-soft:   #2A2E35;
+  --primary-line:   #3A3F47;
+  --green:          #2D7A3E;     /* Enginuity affirmative */
+  --green-deep:     #1F5C2E;
+  --green-bright:   #46A05B;
+  --green-tint:     #E4F0E7;
+  --green-wash:     #F2F8F3;
+
+  /* Tier colors */
+  --tier-strong:    #1F5C2E;
+  --tier-strong-bg: #E4F0E7;
+  --tier-pot:       #2A4E73;
+  --tier-pot-bg:    #E6EEF7;
+  --tier-review:    #8A6312;
+  --tier-review-bg: #F4ECDB;
+  --tier-notfit:    #4A4A4A;
+  --tier-notfit-bg: #ECEAE6;
+
+  /* Surfaces */
+  --bg:             #FAF8F4;     /* warm paper */
+  --bg-card:        #FFFFFF;
+  --bg-instrument:  #14171A;     /* dark panel for technical readouts */
+  --bg-tint:        #F2EFE7;
+  --ink:            #14171A;
+  --ink-2:          #3A3F47;
+  --ink-muted:      #6B7280;
+  --ink-faint:      #9CA3AF;
+  --ink-on-dark:    #F5F3EE;
+  --line:           #E6E0D2;
+  --line-strong:    #C9C2B3;
+
+  /* Geometry */
+  --radius-sm: 3px;
+  --radius:    6px;
+  --radius-lg: 10px;
+  --shadow-sm: 0 1px 0 rgba(20,23,26,0.04), 0 2px 8px rgba(20,23,26,0.04);
+  --shadow:    0 1px 0 rgba(20,23,26,0.04), 0 8px 24px rgba(20,23,26,0.06);
+  --shadow-lg: 0 2px 0 rgba(20,23,26,0.04), 0 24px 48px rgba(20,23,26,0.10);
+
+  /* Type */
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-body:    'Inter Tight', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+body {
+  background-image:
+    linear-gradient(180deg, rgba(26,29,34,0.025) 0%, transparent 240px),
+    repeating-linear-gradient(0deg, transparent 0, transparent 47px, rgba(20,23,26,0.022) 48px),
+    repeating-linear-gradient(90deg, transparent 0, transparent 47px, rgba(20,23,26,0.022) 48px);
+  background-attachment: fixed;
+}
+
+/* ============================================================
+   HEADER + BRAND
+   ============================================================ */
+.app-header {
+  border-bottom: 1px solid var(--line);
+  background: rgba(250, 248, 244, 0.92);
+  position: sticky; top: 0; z-index: 30;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.app-header-inner {
+  max-width: 980px; margin: 0 auto; padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  width: 34px; height: 34px;
+  background: var(--primary);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--ink-on-dark);
+  letter-spacing: -0.02em;
+}
+.brand-mark::before {
+  content: 'E';
+  position: relative;
+  z-index: 2;
+}
+.brand-mark::after {
+  content: '';
+  position: absolute;
+  right: 6px; top: 6px; bottom: 6px;
+  width: 2px;
+  background: var(--green-bright);
+}
+.brand-text { display: flex; flex-direction: column; gap: 2px; }
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1;
+}
+.brand-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  line-height: 1;
+}
+.header-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+/* Brand pillars strip */
+.pillars {
+  background: var(--primary);
+  color: var(--ink-on-dark);
+  border-bottom: 1px solid var(--primary-line);
+}
+.pillars-inner {
+  max-width: 980px; margin: 0 auto; padding: 9px 24px;
+  display: flex; align-items: center; gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.pillar { display: flex; align-items: center; gap: 8px; }
+.pillar-dot {
+  width: 4px; height: 4px;
+  background: var(--green-bright);
+  border-radius: 50%;
+}
+
+/* ============================================================
+   PROGRESS
+   ============================================================ */
+.progress-wrap {
+  max-width: 980px; margin: 0 auto; padding: 20px 24px 0;
+}
+.progress {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+.progress.active { display: flex; }
+.progress-label { white-space: nowrap; }
+.progress-track {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.progress-fill {
+  position: absolute; top: 0; left: 0;
+  height: 100%;
+  background: var(--green);
+  transition: width 0.25s ease;
+}
+
+/* ============================================================
+   MAIN + SCREENS
+   ============================================================ */
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.screen { display: none; animation: fadeUp 0.35s ease both; }
+.screen.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   INTRO
+   ============================================================ */
+.intro-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green-deep);
+  margin-bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.intro-eyebrow::before {
+  content: ''; width: 24px; height: 1px;
+  background: var(--green-deep);
+}
+.intro-headline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(34px, 5vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+.intro-headline em {
+  font-style: normal;
+  color: var(--green-deep);
+}
+.intro-sub {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin-bottom: 36px;
+  max-width: 600px;
+}
+.intro-meta {
+  display: flex; align-items: center; gap: 24px;
+  padding: 16px 0;
+  margin-bottom: 32px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.intro-meta-item {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.intro-meta-key {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.intro-meta-val {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.intro-meta-divider {
+  width: 1px; height: 32px; background: var(--line);
+}
+
+/* ============================================================
+   QUESTION
+   ============================================================ */
+.q-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+}
+.q-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(24px, 3.5vw, 30px);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.q-help {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-bottom: 28px;
+}
+.q-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+.q-option {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+  width: 100%;
+}
+.q-option:hover {
+  border-color: var(--green);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.q-option.selected {
+  background: var(--green-wash);
+  border-color: var(--green);
+}
+.q-option-mark {
+  flex-shrink: 0;
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 50%;
+  margin-top: 2px;
+  position: relative;
+  transition: all 0.15s ease;
+}
+.q-option.multi .q-option-mark { border-radius: 3px; }
+.q-option.selected .q-option-mark {
+  border-color: var(--green);
+  background: var(--green);
+}
+.q-option.selected .q-option-mark::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px; height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+.q-option.multi.selected .q-option-mark::after {
+  border-radius: 1px;
+  width: 8px; height: 4px;
+  background: transparent;
+  border-left: 1.5px solid white;
+  border-bottom: 1.5px solid white;
+  transform: translate(-50%, -65%) rotate(-45deg);
+}
+
+/* State dropdown variant */
+.q-dropdown {
+  width: 100%;
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--ink);
+  cursor: pointer;
+  margin-bottom: 32px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+}
+.q-dropdown:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px var(--green-wash);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.actions {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 32px;
+}
+.actions.actions-end { justify-content: flex-end; }
+.actions.actions-split { justify-content: space-between; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+.btn-primary:hover { background: var(--primary-soft); transform: translateY(-1px); }
+.btn-primary:disabled {
+  background: var(--ink-faint);
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--line-strong);
+}
+.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-muted);
+  padding: 8px 12px;
+  font-size: 13px;
+}
+.btn-ghost:hover { color: var(--primary); }
+.btn-arrow::after {
+  content: '→';
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+.btn-back::before {
+  content: '←';
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+/* ============================================================
+   RESULT
+   ============================================================ */
+.result-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 16px;
+}
+.tier-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.tier-badge::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.tier-strong    { background: var(--tier-strong-bg); color: var(--tier-strong); }
+.tier-strong::before    { background: var(--tier-strong); }
+.tier-potential { background: var(--tier-pot-bg);    color: var(--tier-pot); }
+.tier-potential::before { background: var(--tier-pot); }
+.tier-review    { background: var(--tier-review-bg); color: var(--tier-review); }
+.tier-review::before    { background: var(--tier-review); }
+.tier-notfit    { background: var(--tier-notfit-bg); color: var(--tier-notfit); }
+.tier-notfit::before    { background: var(--tier-notfit); }
+
+.result-headline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(28px, 4vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.result-body {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin-bottom: 36px;
+  max-width: 620px;
+}
+
+/* Savings instrument panel */
+.savings-card {
+  background: var(--bg-instrument);
+  color: var(--ink-on-dark);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.savings-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--green-bright) 0%, var(--green) 50%, var(--green-deep) 100%);
+}
+.savings-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green-bright);
+  margin-bottom: 8px;
+}
+.savings-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.015em;
+  margin-bottom: 6px;
+}
+.savings-sub {
+  font-size: 14px;
+  color: rgba(245, 243, 238, 0.6);
+  margin-bottom: 28px;
+}
+
+.savings-result {
+  padding: 24px 0;
+  border-top: 2px solid var(--green-bright);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-top: 4px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.savings-result::before {
+  content: 'RESULT';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  background: var(--bg-instrument);
+  padding-right: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--green-bright);
+}
+.savings-result-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 238, 0.5);
+  margin-bottom: 12px;
+}
+.savings-figure {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(32px, 5vw, 44px);
+  letter-spacing: -0.025em;
+  color: var(--green-bright);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.savings-figure-sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(245, 243, 238, 0.6);
+  letter-spacing: 0.04em;
+}
+.savings-thin {
+  padding: 20px;
+  background: rgba(255,255,255,0.04);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: rgba(245, 243, 238, 0.85);
+  line-height: 1.5;
+}
+.savings-thin strong { color: var(--green-bright); font-weight: 600; }
+
+.savings-breakdown { margin-bottom: 24px; }
+.savings-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.savings-row:last-child { border-bottom: none; }
+.savings-row.total {
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  border-bottom: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+}
+.savings-row-key { color: rgba(245, 243, 238, 0.75); }
+.savings-row-val {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.savings-row-val.pos { color: #6EC685; }
+.savings-row-val.neg { color: #E8A95A; }
+.savings-row.total .savings-row-val { color: var(--ink-on-dark); }
+
+/* Adjustable inputs panel - always visible, sits above results */
+.refine-panel-static {
+  padding: 20px 0 24px;
+  margin-top: 4px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+}
+.refine-panel-static::before {
+  content: 'INPUTS';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  background: var(--bg-instrument);
+  padding-right: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(245, 243, 238, 0.5);
+}
+.refine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+.refine-field { display: flex; flex-direction: column; gap: 6px; }
+.refine-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 238, 0.6);
+  display: flex; justify-content: space-between;
+}
+.refine-label .modified-flag {
+  color: var(--green-bright);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+}
+.refine-input, .refine-input-text {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--ink-on-dark);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+}
+.refine-input:focus {
+  outline: none;
+  border-color: var(--green-bright);
+  background: rgba(255,255,255,0.06);
+}
+.refine-input-help {
+  font-size: 11px;
+  color: rgba(245, 243, 238, 0.4);
+  margin-top: -2px;
+}
+
+.savings-note {
+  font-size: 13px;
+  color: rgba(245, 243, 238, 0.6);
+  line-height: 1.5;
+  margin-top: 12px;
+}
+.savings-note:empty { display: none; }
+.savings-disclaimer {
+  font-size: 12px;
+  color: rgba(245, 243, 238, 0.5);
+  line-height: 1.55;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Signals summary */
+.signals {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+.signals-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.signal-row {
+  display: flex; justify-content: space-between; gap: 16px;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px dashed var(--line);
+}
+.signal-row:last-child { border-bottom: none; }
+.signal-key { color: var(--ink-muted); }
+.signal-val {
+  color: var(--ink);
+  font-weight: 500;
+  text-align: right;
+  max-width: 60%;
+}
+
+.disclaimer {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.55;
+  padding: 16px 18px;
+  background: var(--bg-tint);
+  border-left: 2px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  margin-bottom: 32px;
+}
+
+/* ============================================================
+   LEAD FORM
+   ============================================================ */
+.form-intro { margin-bottom: 28px; }
+.form-intro-headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
+}
+.form-intro-sub {
+  font-size: 15px;
+  color: var(--ink-muted);
+  max-width: 540px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  display: flex; justify-content: space-between;
+}
+.req { color: var(--green-deep); }
+.opt { color: var(--ink-faint); font-weight: 400; }
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+  transition: border-color 0.15s ease;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px var(--green-wash);
+}
+.form-textarea { min-height: 90px; resize: vertical; }
+.form-select { appearance: none; padding-right: 36px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+.form-radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.form-radio, .form-check {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+  background: var(--bg-card);
+}
+.form-radio.selected, .form-check.selected {
+  border-color: var(--green);
+  background: var(--green-wash);
+}
+.form-radio input, .form-check input { accent-color: var(--green); }
+
+.form-checklist { display: flex; flex-direction: column; gap: 8px; }
+
+.form-consent {
+  display: flex; gap: 12px; align-items: flex-start;
+  font-size: 13px; color: var(--ink-2);
+  padding: 14px 18px;
+  background: var(--bg-tint);
+  border-radius: var(--radius);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+.form-consent input { margin-top: 2px; accent-color: var(--green); }
+
+/* ============================================================
+   SUBMIT CHOICE MODAL
+   ============================================================ */
+.modal-backdrop {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(20,23,26,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  align-items: center; justify-content: center;
+  padding: 24px;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
+}
+.modal-sub {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.modal-choice {
+  display: block;
+  width: 100%;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  transition: all 0.15s ease;
+}
+.modal-choice:hover {
+  border-color: var(--green);
+  background: var(--green-wash);
+}
+.modal-choice-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.modal-choice-sub {
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+/* ============================================================
+   CONFIRMATION
+   ============================================================ */
+.confirm-tick {
+  width: 56px; height: 56px;
+  background: var(--green-tint);
+  color: var(--green-deep);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+.confirm-headline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.confirm-sub {
+  font-size: 16px;
+  color: var(--ink-2);
+  line-height: 1.5;
+  margin-bottom: 36px;
+  max-width: 540px;
+}
+.confirm-next-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 16px;
+}
+.confirm-next-item {
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 15px;
+  color: var(--ink-2);
+  display: flex; gap: 12px;
+}
+.confirm-next-item::before {
+  content: '→';
+  color: var(--green);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.confirm-next-item:last-child { border-bottom: none; }
+
+/* ============================================================
+   DEBUG PANEL
+   ============================================================ */
+.debug-toggle {
+  position: fixed;
+  bottom: 16px; right: 16px;
+  background: var(--primary);
+  color: var(--ink-on-dark);
+  border: none;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  z-index: 50;
+  opacity: 0.6;
+}
+.debug-toggle:hover { opacity: 1; }
+.debug-panel {
+  position: fixed;
+  bottom: 60px; right: 16px;
+  width: 340px; max-height: 60vh;
+  background: var(--bg-instrument);
+  color: var(--ink-on-dark);
+  border-radius: var(--radius);
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  display: none;
+  overflow-y: auto;
+  z-index: 50;
+  box-shadow: var(--shadow-lg);
+}
+.debug-panel.open { display: block; }
+.debug-title {
+  color: var(--green-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 9px;
+  margin-bottom: 8px;
+}
+.debug-section { margin-top: 14px; }
+.debug-row {
+  display: flex; justify-content: space-between;
+  padding: 2px 0;
+  font-size: 10px;
+}
+.debug-key { color: rgba(245,243,238,0.5); }
+.debug-val { color: rgba(245,243,238,0.95); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .pillars-inner { gap: 16px; }
+  .pillar { font-size: 9px; }
+  .intro-meta { flex-wrap: wrap; gap: 16px; }
+  .actions { flex-wrap: wrap; }
+  .savings-card { padding: 20px; }
+  .header-tag { display: none; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="app-header-inner">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-text">
+        <div class="brand-name">Enginuity Power Systems</div>
+        <div class="brand-tag">Simply Efficient</div>
+      </div>
+    </div>
+    <div class="header-tag">CHP Fit Screening · v2.0</div>
+  </div>
+</header>
+
+<!-- BRAND PILLARS -->
+<div class="pillars">
+  <div class="pillars-inner">
+    <div class="pillar"><span class="pillar-dot"></span>Cost Savings</div>
+    <div class="pillar"><span class="pillar-dot"></span>Resilience</div>
+    <div class="pillar"><span class="pillar-dot"></span>Carbon Reduction</div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress" id="progress">
+    <div class="progress-label" id="progressLabel">Question 1 of 7</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<main>
+
+  <!-- INTRO -->
+  <section class="screen active" id="screen-intro">
+    <div class="intro-eyebrow">Combined Heat &amp; Power Screening</div>
+    <h1 class="intro-headline">Is your facility a fit for <em>on-site power and recovered heat?</em></h1>
+    <p class="intro-sub">Answer 7 quick questions to see whether an Enginuity E|200 or E|100 CHP system makes sense at your site. We use EIA energy rates and your facility profile to model an indicative annual savings range. Takes about a minute.</p>
+
+    <div class="intro-meta">
+      <div class="intro-meta-item">
+        <span class="intro-meta-key">Time</span>
+        <span class="intro-meta-val">~1 minute</span>
+      </div>
+      <div class="intro-meta-divider"></div>
+      <div class="intro-meta-item">
+        <span class="intro-meta-key">Questions</span>
+        <span class="intro-meta-val">6 total</span>
+      </div>
+      <div class="intro-meta-divider"></div>
+      <div class="intro-meta-item">
+        <span class="intro-meta-key">Output</span>
+        <span class="intro-meta-val">Fit tier + savings</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary btn-arrow" onclick="startScreening()">Start screening</button>
+    </div>
+  </section>
+
+  <!-- QUESTION -->
+  <section class="screen" id="screen-question">
+    <div class="q-eyebrow" id="qEyebrow"></div>
+    <h2 class="q-text" id="qText"></h2>
+    <p class="q-help" id="qHelp"></p>
+    <div id="qOptions"></div>
+
+    <div class="actions actions-split">
+      <button class="btn btn-secondary btn-back" id="btnBack" onclick="prevQuestion()">Back</button>
+      <div style="display:flex; gap:12px;">
+        <button class="btn btn-ghost" onclick="restart()">Restart</button>
+        <button class="btn btn-primary btn-arrow" id="btnNext" onclick="nextQuestion()" disabled>Next</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="screen-result">
+    <div class="result-eyebrow">Screening Result</div>
+    <div class="tier-badge" id="tierBadge"></div>
+    <h1 class="result-headline" id="resultHeadline"></h1>
+    <p class="result-body" id="resultBody"></p>
+
+    <!-- Savings instrument panel -->
+    <div class="savings-card" id="savingsCard" style="display:none;">
+      <div class="savings-eyebrow">Indicative Annual Energy Savings Calculator</div>
+      <div class="savings-title" id="savingsModelLine">Modeled on the Enginuity E|200 CHP</div>
+      <div class="savings-sub">Pre-filled with state-average rates from EIA and defaults from your facility type. Adjust any field below to refine the estimate.</div>
+
+      <!-- Inputs first, always visible -->
+      <div class="refine-panel-static">
+        <div class="refine-grid">
+          <div class="refine-field">
+            <label class="refine-label">Annual electric use (kWh) <span class="modified-flag" id="mod_kwh" style="display:none">edited</span></label>
+            <input class="refine-input" type="number" id="ref_kwh" min="0" max="100000000" step="1000" placeholder="optional">
+            <div class="refine-input-help">If known, refines product fit</div>
+          </div>
+          <div class="refine-field">
+            <label class="refine-label">Electric rate ($/kWh) <span class="modified-flag" id="mod_elec" style="display:none">edited</span></label>
+            <input class="refine-input" type="number" id="ref_elec" min="0.01" max="1.00" step="0.001">
+            <div class="refine-input-help" id="elecRateHelp">State average from EIA</div>
+          </div>
+          <div class="refine-field">
+            <label class="refine-label">Gas rate ($/therm) <span class="modified-flag" id="mod_gas" style="display:none">edited</span></label>
+            <input class="refine-input" type="number" id="ref_gas" min="0.10" max="5.00" step="0.01">
+            <div class="refine-input-help" id="gasRateHelp">State average from EIA</div>
+          </div>
+          <div class="refine-field">
+            <label class="refine-label">Boiler efficiency (%) <span class="modified-flag" id="mod_boiler" style="display:none">edited</span></label>
+            <input class="refine-input" type="number" id="ref_boiler" min="50" max="98" step="1">
+            <div class="refine-input-help">Existing boiler, default 80</div>
+          </div>
+          <div class="refine-field">
+            <label class="refine-label">Annual runtime (hours) <span class="modified-flag" id="mod_hours" style="display:none">edited</span></label>
+            <input class="refine-input" type="number" id="ref_hours" min="500" max="8700" step="1">
+            <div class="refine-input-help">500 to 8,700, from facility type</div>
+          </div>
+          <div class="refine-field">
+            <label class="refine-label">Electric utilization (%) <span class="modified-flag" id="mod_eutil" style="display:none">edited</span></label>
+            <input class="refine-input" type="number" id="ref_eutil" min="50" max="100" step="1">
+            <div class="refine-input-help">% of generation absorbed on-site</div>
+          </div>
+          <div class="refine-field">
+            <label class="refine-label">Thermal utilization (%) <span class="modified-flag" id="mod_tutil" style="display:none">edited</span></label>
+            <input class="refine-input" type="number" id="ref_tutil" min="0" max="100" step="1">
+            <div class="refine-input-help">% of recovered heat used</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results below -->
+      <div class="savings-result" id="savingsResult"></div>
+
+      <div class="savings-breakdown" id="savingsBreakdown"></div>
+
+      <div class="savings-note" id="savingsNote"></div>
+
+      <div class="savings-disclaimer">
+        Estimate excludes demand charges, standby tariffs, interconnection costs, incentives, ITC, MACRS, financing, and resilience value. Application Engineering models these in detail during follow-up. Actual project performance requires 12 months of utility data, interval load profiles, and site evaluation.
+      </div>
+    </div>
+
+    <!-- Signals -->
+    <div class="signals">
+      <div class="signals-title">Your Answers</div>
+      <div id="resultSignals"></div>
+    </div>
+
+    <div class="disclaimer">
+      This screening provides an initial fit indication only. It is not a feasibility analysis or guarantee of project performance. A real evaluation requires 12 months of electric and gas utility bills, interval electric data when available, thermal load details, site conditions, existing equipment review, building drawings, interconnection point details, and local utility tariff and interconnection requirements.
+    </div>
+
+    <div class="actions actions-split">
+      <button class="btn btn-secondary btn-back" onclick="returnToQuestions()">Back to questions</button>
+      <div style="display:flex; gap:12px;">
+        <button class="btn btn-ghost" onclick="restart()">Restart</button>
+        <button class="btn btn-primary btn-arrow" onclick="proceedToLead()">Request follow-up</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEAD FORM -->
+  <section class="screen" id="screen-lead">
+    <div class="form-intro">
+      <h2 class="form-intro-headline">Tell us how to reach you</h2>
+      <p class="form-intro-sub">A member of our team will be in touch within one to three business days, depending on your fit tier. Fields marked with <span class="req">*</span> are required.</p>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field full">
+        <label class="form-label">Full name<span class="req">*</span></label>
+        <input class="form-input" id="leadName" type="text" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Company<span class="req">*</span></label>
+        <input class="form-input" id="leadCompany" type="text" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Work email<span class="req">*</span></label>
+        <input class="form-input" id="leadEmail" type="email" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Phone<span class="opt">optional</span></label>
+        <input class="form-input" id="leadPhone" type="tel">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Facility city<span class="req">*</span></label>
+        <input class="form-input" id="leadCity" type="text" required>
+      </div>
+      <div class="form-field full">
+        <label class="form-label">State<span class="req">*</span></label>
+        <input class="form-input" id="leadState" type="text" readonly style="background:var(--bg-tint);">
+      </div>
+      <div class="form-field full">
+        <label class="form-label">Facility type<span class="req">*</span></label>
+        <select class="form-select" id="leadFacility" required></select>
+      </div>
+      <div class="form-field full">
+        <label class="form-label">What is your project timing?<span class="req">*</span></label>
+        <select class="form-select" id="leadTiming" required></select>
+      </div>
+      <div class="form-field full">
+        <label class="form-label">Brief project description<span class="opt">optional, 1-2 sentences</span></label>
+        <textarea class="form-textarea" id="leadDesc" maxlength="280" placeholder="Anything you'd like us to know before we reach out..."></textarea>
+      </div>
+
+      <div class="form-field full">
+        <label class="form-label">What is driving your interest in CHP?<span class="opt">select all that apply</span></label>
+        <div class="form-checklist" id="reasonChecklist"></div>
+      </div>
+
+      <div class="form-field full">
+        <label class="form-label">How do you envision financing this project?<span class="req">*</span></label>
+        <select class="form-select" id="leadFinancing" required>
+          <option value="">Select...</option>
+        </select>
+      </div>
+
+      <div class="form-field full">
+        <label class="form-label">Are you evaluating for your own facility?<span class="req">*</span></label>
+        <select class="form-select" id="leadRole" required>
+          <option value="">Select...</option>
+        </select>
+      </div>
+
+      <div class="form-field full">
+        <label class="form-label">Preferred follow-up<span class="req">*</span></label>
+        <div class="form-radio-group" id="followupGroup">
+          <label class="form-radio"><input type="radio" name="followup" value="email">Email</label>
+          <label class="form-radio"><input type="radio" name="followup" value="phone">Phone</label>
+          <label class="form-radio"><input type="radio" name="followup" value="either">Either</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-consent">
+      <input type="checkbox" id="leadConsent">
+      <label for="leadConsent">I agree to be contacted by Enginuity Power Systems or an authorized channel partner about this inquiry. We use HubSpot to manage outreach and will not share your details outside our distribution and service network.</label>
+    </div>
+
+    <div class="disclaimer" style="margin-bottom:24px;">
+      Any savings figure shown is an illustrative estimate calculated from state-average energy rates, not a quote. Actual results depend on tariffs, site conditions, and interconnection requirements that require Application Engineering review.
+    </div>
+
+    <div class="actions actions-split">
+      <button class="btn btn-secondary btn-back" onclick="returnToResult()">Back to result</button>
+      <div style="display:flex; gap:12px;">
+        <button class="btn btn-ghost" onclick="restart()">Restart</button>
+        <button class="btn btn-primary btn-arrow" onclick="handleSubmit()">Submit</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIRMATION -->
+  <section class="screen" id="screen-confirm">
+    <div class="confirm-tick">✓</div>
+    <h1 class="confirm-headline">Thanks, we've got your information.</h1>
+    <p class="confirm-sub" id="confirmSub"></p>
+
+    <div class="confirm-next-title">What happens next</div>
+    <div id="confirmNext"></div>
+
+    <div class="actions" style="margin-top:36px;">
+      <button class="btn btn-secondary" onclick="restart()">Start over</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- SUBMIT CHOICE MODAL -->
+<div class="modal-backdrop" id="submitModal">
+  <div class="modal">
+    <h3 class="modal-title">Which version should we use?</h3>
+    <p class="modal-sub">You changed one or more inputs from the questionnaire defaults. Pick which set you want to submit. The Enginuity team will see both for context.</p>
+
+    <button class="modal-choice" onclick="confirmSubmit('edited')">
+      <div class="modal-choice-title">Send my edited values</div>
+      <div class="modal-choice-sub" id="modalEditedSummary"></div>
+    </button>
+    <button class="modal-choice" onclick="confirmSubmit('questionnaire')">
+      <div class="modal-choice-title">Send the questionnaire defaults</div>
+      <div class="modal-choice-sub" id="modalDefaultSummary"></div>
+    </button>
+
+    <div style="margin-top:16px; text-align:right;">
+      <button class="btn btn-ghost" onclick="closeSubmitModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEBUG -->
+<button class="debug-toggle" onclick="toggleDebug()">Debug</button>
+<div class="debug-panel" id="debugPanel"></div>
+
+<script>
+/* ============================================================
+   DATA TABLES (mirrors chp-screening-data.js)
+   ============================================================ */
+const PRODUCTS = {
+  e200: { name: 'Enginuity E|200 CHP', status: 'available', outputKW: 180,
+          heatBtuHr: 1054351, recoveryKW: 309.0, fuelThermsPerHr: 19.63,
+          notes: 'For sites with base load 100-180 kW.' },
+  e100: { name: 'Enginuity E|100 CHP', status: 'planned_2026', outputKW: 100,
+          heatBtuHr: 624000, recoveryKW: 182.9, fuelThermsPerHr: 11.30,
+          notes: 'For smaller sites with base load 50-100 kW.' }
+};
+
+const SAVINGS_CONST = {
+  defaultBoilerEff: 0.80, defaultElecUtil: 1.00,
+  btuPerTherm: 100000, kwhToBtu: 3412.14,
+  omPerKWh: 0.025, rangePct: 0.25,
+  runHoursMin: 500, runHoursMax: 8700,
+  thermalUtilMin: 0, thermalUtilMax: 100,
+  elecUtilMin: 50, elecUtilMax: 100,
+  boilerEffMin: 50, boilerEffMax: 98,
+  elecRateMin: 0.01, elecRateMax: 1.00,
+  gasRateMin: 0.10, gasRateMax: 5.00
+};
+
+const FACILITY_TYPES = {
+  hospital:    { label: 'Hospital',               runHours: 8700, thermalUtilBase: 0.90, verticalScore: 3 },
+  multifamily: { label: 'Multifamily',            runHours: 8700, thermalUtilBase: 0.85, verticalScore: 3 },
+  hotel:       { label: 'Hotel / Resort',         runHours: 8700, thermalUtilBase: 0.90, verticalScore: 3 },
+  agriculture: { label: 'Agriculture',            runHours: 8700, thermalUtilBase: 0.80, verticalScore: 3 },
+  industrial:  { label: 'Industrial',             runHours: 6000, thermalUtilBase: 0.70, verticalScore: 3 },
+  office:      { label: 'Office Building',        runHours: 3000, thermalUtilBase: 0.30, verticalScore: 1 },
+  k12:         { label: 'K-12 School',            runHours: 2500, thermalUtilBase: 0.25, verticalScore: 1 },
+  college:     { label: 'College / Large Campus', runHours: 7000, thermalUtilBase: 0.75, verticalScore: 2 },
+  microgrid:   { label: 'Microgrid',              runHours: 8700, thermalUtilBase: 0.50, verticalScore: 2 },
+  other:       { label: 'Other',                  runHours: 5000, thermalUtilBase: 0.50, verticalScore: 1 }
+};
+
+const THERMAL_DEMAND_MODIFIER = {
+  yes: 1.00, mostly: 0.85, seasonal: 0.50, limited: 0.20, dont_know: 0.80
+};
+
+/* Electric and fuel bills are now stored as monthly $ values (string from dropdown).
+ * Special sentinel values: 'over_100k' (electric), 'over_20k' (fuel), 'not_sure'.
+ * Scoring uses band thresholds; cap and product selection use numeric monthly × 12. */
+const ELEC_BILL_BANDS = [
+  { min: 0,      max: 5000,    points: 0 },
+  { min: 5000,   max: 15000,   points: 2 },
+  { min: 15000,  max: 40000,   points: 3 },
+  { min: 40000,  max: 100001,  points: 2 },
+  { min: 100001, max: Infinity, points: 1 }
+];
+const FUEL_BILL_BANDS = [
+  { min: 0,     max: 1000,     points: 0 },
+  { min: 1000,  max: 3000,     points: 1 },
+  { min: 3000,  max: 8000,     points: 2 },
+  { min: 8000,  max: 20001,    points: 3 },
+  { min: 20001, max: Infinity, points: 2 }
+];
+const ELEC_BILL_NOT_SURE_DEFAULT = 20000;  // $/month used when "not sure" is picked
+const FUEL_BILL_NOT_SURE_DEFAULT = 4000;
+const ELEC_OVER_100K_FOR_CAP     = 150000; // assumed monthly for >$100K (used for cap)
+const FUEL_OVER_20K_FOR_CAP      = 30000;  // assumed monthly for >$20K
+
+function billValueToMonthly(v, kind) {
+  // kind = 'elec' or 'fuel'
+  if (v == null || v === 'not_sure') {
+    return kind === 'elec' ? ELEC_BILL_NOT_SURE_DEFAULT : FUEL_BILL_NOT_SURE_DEFAULT;
+  }
+  if (v === 'over_100k') return ELEC_OVER_100K_FOR_CAP;
+  if (v === 'over_20k')  return FUEL_OVER_20K_FOR_CAP;
+  const n = parseInt(v, 10);
+  return isNaN(n) ? 0 : n;
+}
+
+function billPoints(v, kind) {
+  if (v == null || v === 'not_sure') return 0;
+  const bands = kind === 'elec' ? ELEC_BILL_BANDS : FUEL_BILL_BANDS;
+  if (v === 'over_100k' || v === 'over_20k') {
+    return bands[bands.length - 1].points;
+  }
+  const n = parseInt(v, 10);
+  if (isNaN(n)) return 0;
+  const band = bands.find(b => n >= b.min && n < b.max);
+  return band ? band.points : 0;
+}
+
+function billLabel(v) {
+  if (v == null || v === 'not_sure') return 'Not sure';
+  if (v === 'over_100k') return '$100,000+';
+  if (v === 'over_20k')  return '$20,000+';
+  const n = parseInt(v, 10);
+  return isNaN(n) ? String(v) : ('$' + n.toLocaleString());
+}
+
+function makeBillOptions(min, max, step, plusValue, plusLabel) {
+  const opts = [];
+  for (let v = min; v <= max; v += step) {
+    opts.push({ v: String(v), l: '$' + v.toLocaleString() });
+  }
+  opts.push({ v: plusValue, l: plusLabel });
+  opts.push({ v: 'not_sure', l: 'Not sure' });
+  return opts;
+}
+
+const GAS_AVAIL = {
+  yes: { label: 'Yes, connected at the site', points: 3 },
+  available_unconnected: { label: 'Available at the street, not yet connected', points: 2 },
+  no: { label: 'No gas service in the area', points: 0 },
+  dont_know: { label: "Don't know", points: 0 }
+};
+
+const TIMING = {
+  exploring: { label: 'Just exploring', points: 0 },
+  '0_12':    { label: '0 to 12 months', points: 2 },
+  '12_24':   { label: '12 to 24 months', points: 2 },
+  no_timeline: { label: 'No timeline yet', points: 0 }
+};
+
+const THERMAL_POINTS = { yes: 3, mostly: 2, seasonal: -1, limited: -2, dont_know: 0 };
+
+const TIER_THRESHOLDS = { strong: 13, potential: 9, review: 4 };
+const SAVINGS_DEMOTION_FLOOR = 20000;
+
+// Internal lead score weights (commercial readiness, not technical fit)
+const LEAD_SCORE = {
+  timing:    { exploring: 0, no_timeline: 0, '12_24': 2, '0_12': 4 },
+  financing: { direct: 3, ppa: 2, eaas: 2, open: 1 },
+  role:      { end_user: 3, esco_consultant: 2, developer: 2, investor: 1 },
+  reasonPointEach: 0.5,
+  reasonPointMax:  3,
+  thresholds: { hot: 10, warm: 6 }
+};
+
+const REASON_FOR_INTEREST = [
+  { v: 'cost', l: 'Reduce utility costs' },
+  { v: 'resilience', l: 'Energy resilience or backup power' },
+  { v: 'sustainability', l: 'Emissions or sustainability goals' },
+  { v: 'new_construction', l: 'New construction project' },
+  { v: 'equipment_replacement', l: 'Replacing aging boilers or generators' },
+  { v: 'exploring', l: 'Just exploring options' }
+];
+
+const FINANCING = [
+  { v: 'direct', l: 'Direct purchase or finance (we own the equipment)' },
+  { v: 'ppa',    l: 'Power Purchase Agreement (PPA)' },
+  { v: 'eaas',   l: 'Energy as a Service (EaaS)' },
+  { v: 'open',   l: 'Not sure yet, open to options' }
+];
+
+const ROLES = [
+  { v: 'end_user',        l: 'Yes, for our own facility' },
+  { v: 'developer',       l: 'No, on behalf of a client' },
+  { v: 'esco_consultant', l: 'ESCO, consultant, or energy advisor' },
+  { v: 'investor',        l: 'Investor or financier' }
+];
+
+const STATES = [
+  ['AL','Alabama'],['AK','Alaska'],['AZ','Arizona'],['AR','Arkansas'],
+  ['CA','California'],['CO','Colorado'],['CT','Connecticut'],['DE','Delaware'],
+  ['DC','District of Columbia'],['FL','Florida'],['GA','Georgia'],['HI','Hawaii'],
+  ['ID','Idaho'],['IL','Illinois'],['IN','Indiana'],['IA','Iowa'],
+  ['KS','Kansas'],['KY','Kentucky'],['LA','Louisiana'],['ME','Maine'],
+  ['MD','Maryland'],['MA','Massachusetts'],['MI','Michigan'],['MN','Minnesota'],
+  ['MS','Mississippi'],['MO','Missouri'],['MT','Montana'],['NE','Nebraska'],
+  ['NV','Nevada'],['NH','New Hampshire'],['NJ','New Jersey'],['NM','New Mexico'],
+  ['NY','New York'],['NC','North Carolina'],['ND','North Dakota'],['OH','Ohio'],
+  ['OK','Oklahoma'],['OR','Oregon'],['PA','Pennsylvania'],['RI','Rhode Island'],
+  ['SC','South Carolina'],['SD','South Dakota'],['TN','Tennessee'],['TX','Texas'],
+  ['UT','Utah'],['VT','Vermont'],['VA','Virginia'],['WA','Washington'],
+  ['WV','West Virginia'],['WI','Wisconsin'],['WY','Wyoming']
+];
+
+// EIA Feb 2026 commercial electric / Jan 2026 industrial gas (converted $/Mcf / 10.37 = $/therm)
+const RATES_BY_STATE = {
+  AL:{elecRate:0.150,gasRate:0.736}, AK:{elecRate:0.225,gasRate:0.727},
+  AZ:{elecRate:0.117,gasRate:0.452}, AR:{elecRate:0.116,gasRate:1.014},
+  CA:{elecRate:0.247,gasRate:1.469}, CO:{elecRate:0.133,gasRate:0.705},
+  CT:{elecRate:0.246,gasRate:0.834}, DE:{elecRate:0.145,gasRate:1.222},
+  DC:{elecRate:0.224,gasRate:1.000}, FL:{elecRate:0.128,gasRate:0.580},
+  GA:{elecRate:0.120,gasRate:0.937}, HI:{elecRate:0.386,gasRate:2.963},
+  ID:{elecRate:0.094,gasRate:0.408}, IL:{elecRate:0.133,gasRate:0.639},
+  IN:{elecRate:0.144,gasRate:0.650}, IA:{elecRate:0.107,gasRate:0.733},
+  KS:{elecRate:0.117,gasRate:0.620}, KY:{elecRate:0.125,gasRate:0.670},
+  LA:{elecRate:0.122,gasRate:0.609}, ME:{elecRate:0.240,gasRate:0.996},
+  MD:{elecRate:0.181,gasRate:1.408}, MA:{elecRate:0.253,gasRate:1.734},
+  MI:{elecRate:0.152,gasRate:0.776}, MN:{elecRate:0.121,gasRate:0.853},
+  MS:{elecRate:0.147,gasRate:0.713}, MO:{elecRate:0.099,gasRate:0.885},
+  MT:{elecRate:0.125,gasRate:0.686}, NE:{elecRate:0.104,gasRate:0.712},
+  NV:{elecRate:0.090,gasRate:0.380}, NH:{elecRate:0.229,gasRate:1.265},
+  NJ:{elecRate:0.173,gasRate:1.240}, NM:{elecRate:0.105,gasRate:0.500},
+  NY:{elecRate:0.235,gasRate:1.329}, NC:{elecRate:0.112,gasRate:0.760},
+  ND:{elecRate:0.081,gasRate:0.923}, OH:{elecRate:0.143,gasRate:0.986},
+  OK:{elecRate:0.088,gasRate:0.521}, OR:{elecRate:0.107,gasRate:0.674},
+  PA:{elecRate:0.149,gasRate:1.056}, RI:{elecRate:0.241,gasRate:1.118},
+  SC:{elecRate:0.128,gasRate:0.759}, SD:{elecRate:0.112,gasRate:0.721},
+  TN:{elecRate:0.132,gasRate:0.823}, TX:{elecRate:0.089,gasRate:0.529},
+  UT:{elecRate:0.100,gasRate:0.630}, VT:{elecRate:0.208,gasRate:0.726},
+  VA:{elecRate:0.130,gasRate:0.704}, WA:{elecRate:0.122,gasRate:1.369},
+  WV:{elecRate:0.118,gasRate:0.513}, WI:{elecRate:0.140,gasRate:0.774},
+  WY:{elecRate:0.098,gasRate:0.380}
+};
+const RATES_NATIONAL = { elecRate: 0.144, gasRate: 0.694 };
+const RATES_VINTAGE  = '2026-02 electric / 2026-01 gas';
+
+/* ============================================================
+   QUESTIONS
+   ============================================================ */
+const QUESTIONS = [
+  { id: 'q1_gas', type: 'single', text: 'Is natural gas service available at the site?',
+    help: 'CHP runs on natural gas. We need this first.',
+    options: Object.entries(GAS_AVAIL).map(([v,o]) => ({v, l: o.label})) },
+  { id: 'q2_state', type: 'dropdown', text: 'Where is the facility located?',
+    help: "We'll use this to estimate your local energy rates from EIA data.",
+    options: STATES.map(([v,l]) => ({v, l})) },
+  { id: 'q3_facility', type: 'single', text: 'What type of facility are you considering?',
+    help: 'Pick the closest match.',
+    options: Object.entries(FACILITY_TYPES).map(([v,o]) => ({v, l: o.label})) },
+  { id: 'q4_elec_bill', type: 'dropdown',
+    text: 'What is your typical monthly electric bill at this site?',
+    help: 'Pick the closest amount. Choose $100,000+ if your bill is larger.',
+    options: makeBillOptions(1000, 100000, 1000, 'over_100k', '$100,000+') },
+  { id: 'q5_fuel_bill', type: 'dropdown',
+    text: 'What is your typical monthly natural gas bill at this site?',
+    help: 'For your existing boilers, water heaters, and other gas equipment.',
+    options: makeBillOptions(500, 20000, 500, 'over_20k', '$20,000+') },
+  { id: 'q6_thermal', type: 'single', text: 'Does the facility need heat or hot water year-round?',
+    help: 'Year-round thermal demand is critical for CHP economics.',
+    options: [
+      { v: 'yes', l: 'Yes, consistent year-round' },
+      { v: 'mostly', l: 'Mostly, with some seasonal variation' },
+      { v: 'seasonal', l: 'Mainly seasonal (winter heating only)' },
+      { v: 'limited', l: 'Limited or no heat demand' },
+      { v: 'dont_know', l: "Don't know" }
+    ] }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  step: 0,
+  answers: {},
+  result: null,
+  questionnaireSavings: null,
+  editedValues: null,
+  userEdited: false,
+  submissionBasis: null   // 'questionnaire' | 'edited'
+};
+
+/* ============================================================
+   FLOW
+   ============================================================ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startScreening() {
+  state.step = 0;
+  document.getElementById('progress').classList.add('active');
+  renderQuestion();
+  showScreen('screen-question');
+}
+
+function restart() {
+  // Reset state object
+  state.step = 0;
+  state.answers = {};
+  state.result = null;
+  state.questionnaireSavings = null;
+  state.editedValues = null;
+  state.userEdited = false;
+  state.submissionBasis = null;
+
+  // Reset progress indicator
+  const progressEl = document.getElementById('progress');
+  if (progressEl) progressEl.classList.remove('active');
+  const progressFill = document.getElementById('progressFill');
+  if (progressFill) progressFill.style.width = '0%';
+
+  // Clear text/email/tel/number/textarea inputs in lead form and refine panel
+  ['leadName','leadCompany','leadEmail','leadPhone','leadCity','leadState','leadDesc',
+   'ref_kwh','ref_elec','ref_gas','ref_boiler','ref_hours','ref_eutil','ref_tutil']
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+
+  // Reset select dropdowns
+  ['leadFacility','leadTiming','leadFinancing','leadRole']
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+
+  // Uncheck all checkboxes and radios, and clear their visual selected state
+  document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
+    input.checked = false;
+    if (input.parentElement && input.parentElement.classList) {
+      input.parentElement.classList.remove('selected');
+    }
+  });
+
+  // Reset refine panel modified flags
+  ['mod_kwh','mod_elec','mod_gas','mod_boiler','mod_hours','mod_eutil','mod_tutil']
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+
+  // (Refine panel is now always visible; no toggle state to clear)
+
+  // Close submit modal if it's open
+  const modal = document.getElementById('submitModal');
+  if (modal) modal.classList.remove('open');
+
+  // Return to intro
+  showScreen('screen-intro');
+}
+
+function returnToQuestions() {
+  state.step = QUESTIONS.length - 1;
+  document.getElementById('progress').classList.add('active');
+  renderQuestion();
+  showScreen('screen-question');
+}
+
+function returnToResult() {
+  showScreen('screen-result');
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[state.step];
+  document.getElementById('qEyebrow').textContent = 'Question ' + (state.step + 1) + ' of ' + QUESTIONS.length;
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('qHelp').textContent = q.help || '';
+  document.getElementById('qHelp').style.display = q.help ? 'block' : 'none';
+
+  // Progress bar
+  const pct = ((state.step) / QUESTIONS.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent =
+    'Question ' + (state.step + 1) + ' of ' + QUESTIONS.length;
+
+  const optsContainer = document.getElementById('qOptions');
+  optsContainer.innerHTML = '';
+
+  if (q.type === 'dropdown') {
+    const sel = document.createElement('select');
+    sel.className = 'q-dropdown';
+    sel.innerHTML = '<option value="">Select...</option>' +
+      q.options.map(o => '<option value="' + o.v + '"' +
+        (state.answers[q.id] === o.v ? ' selected' : '') + '>' + o.l + '</option>').join('');
+    sel.onchange = function() { selectOption(q, this.value); };
+    optsContainer.className = 'q-options';
+    optsContainer.appendChild(sel);
+  } else {
+    optsContainer.className = 'q-options';
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'q-option' + (q.type === 'multi' ? ' multi' : '');
+      const isSelected = q.type === 'multi'
+        ? (state.answers[q.id] || []).indexOf(opt.v) !== -1
+        : state.answers[q.id] === opt.v;
+      if (isSelected) btn.classList.add('selected');
+      btn.innerHTML = '<span class="q-option-mark"></span><span>' + opt.l + '</span>';
+      btn.onclick = function() { selectOption(q, opt.v); };
+      optsContainer.appendChild(btn);
+    });
+  }
+
+  // Back button state
+  document.getElementById('btnBack').style.visibility =
+    state.step === 0 ? 'hidden' : 'visible';
+
+  // Next button label
+  const btnNext = document.getElementById('btnNext');
+  btnNext.textContent = state.step === QUESTIONS.length - 1 ? 'See your result' : 'Next';
+  btnNext.classList.add('btn-arrow');
+
+  updateNextButton();
+}
+
+function selectOption(q, v) {
+  if (q.type === 'multi') {
+    let arr = state.answers[q.id] || [];
+    if (arr.indexOf(v) !== -1) arr = arr.filter(x => x !== v);
+    else arr = arr.concat([v]);
+    state.answers[q.id] = arr;
+  } else {
+    state.answers[q.id] = v;
+  }
+  renderQuestion();
+  updateNextButton();
+  updateDebug();
+}
+
+function updateNextButton() {
+  const q = QUESTIONS[state.step];
+  const a = state.answers[q.id];
+  const ok = q.type === 'multi' ? (a && a.length > 0) : (a !== undefined && a !== '');
+  document.getElementById('btnNext').disabled = !ok;
+}
+
+function nextQuestion() {
+  if (state.step < QUESTIONS.length - 1) {
+    state.step++;
+    renderQuestion();
+  } else {
+    state.result = scoreFacility(state.answers);
+    computeQuestionnaireSavings();
+    applySavingsDemotion();
+    renderResult();
+    showScreen('screen-result');
+    document.getElementById('progress').classList.remove('active');
+  }
+  updateDebug();
+}
+
+function prevQuestion() {
+  if (state.step > 0) {
+    state.step--;
+    renderQuestion();
+  }
+}
+
+/* ============================================================
+   SCORING
+   ============================================================ */
+function scoreFacility(a) {
+  // Hard disqualifier
+  if (a.q1_gas === 'no') {
+    return { tier: 'notfit', score: 0, reason: 'no_gas', breakdown: [] };
+  }
+
+  let score = 0;
+  const bd = [];
+
+  const gasPts = GAS_AVAIL[a.q1_gas].points;
+  score += gasPts; bd.push(['Natural gas availability', gasPts]);
+
+  const facPts = FACILITY_TYPES[a.q3_facility].verticalScore;
+  score += facPts; bd.push(['Facility type', facPts]);
+
+  const elecPts = billPoints(a.q4_elec_bill, 'elec');
+  score += elecPts; bd.push(['Electric bill', elecPts]);
+
+  const fuelPts = billPoints(a.q5_fuel_bill, 'fuel');
+  score += fuelPts; bd.push(['Gas bill', fuelPts]);
+
+  const thermPts = THERMAL_POINTS[a.q6_thermal];
+  score += thermPts; bd.push(['Thermal demand', thermPts]);
+
+  let tier;
+  if (score >= TIER_THRESHOLDS.strong) tier = 'strong';
+  else if (score >= TIER_THRESHOLDS.potential) tier = 'potential';
+  else if (score >= TIER_THRESHOLDS.review) tier = 'review';
+  else tier = 'notfit';
+
+  // Soft reason codes for borderline tiers
+  let reason = null;
+  const monthlyElec = billValueToMonthly(a.q4_elec_bill, 'elec');
+  if (a.q4_elec_bill !== 'not_sure' && monthlyElec < 5000 && tier !== 'strong') {
+    reason = 'small_load_e100_watch';
+  } else if (a.q4_elec_bill === 'over_100k') {
+    reason = 'above_e200_range';
+  } else if (a.q1_gas === 'available_unconnected') {
+    reason = 'gas_not_yet_connected';
+  }
+
+  return { tier, score, reason, breakdown: bd };
+}
+
+/* ============================================================
+   PRODUCT SELECTION
+   ============================================================ */
+function selectProduct(answers, editedValues) {
+  // E|200 picked when estimated base load >= 150 kW. Below that, E|100 is the
+  // closer match (avoids E|200 running consistently below 150 kW load-follow).
+  //
+  // Estimation order:
+  //   1) If user provided annual kWh, use it directly.
+  //   2) Otherwise derive from monthly bill / state-average rate.
+  //   3) "Not sure" defaults to E|200 (most common at typical bill ranges).
+  const rates    = RATES_BY_STATE[answers.q2_state] || RATES_NATIONAL;
+  const facHours = FACILITY_TYPES[answers.q3_facility].runHours;
+  const runHours = (editedValues && editedValues.runHours) || facHours;
+
+  let estimatedKWh;
+  if (editedValues && editedValues.annualKWh && editedValues.annualKWh > 0) {
+    estimatedKWh = editedValues.annualKWh;
+  } else if (answers.q4_elec_bill === 'not_sure') {
+    return 'e200';
+  } else {
+    const monthly = billValueToMonthly(answers.q4_elec_bill, 'elec');
+    estimatedKWh = (monthly * 12) / rates.elecRate;
+  }
+
+  const baseLoadKW = estimatedKWh / runHours;
+  return baseLoadKW >= 150 ? 'e200' : 'e100';
+}
+
+/* ============================================================
+   INTERNAL LEAD SCORE (commercial readiness, not technical fit)
+   Never displayed to the user. Goes to HubSpot for sales prioritization.
+   ============================================================ */
+function computeLeadScore(timing, financing, role, reasons) {
+  let score = 0;
+  const breakdown = [];
+
+  const tPts = LEAD_SCORE.timing[timing] || 0;
+  score += tPts; breakdown.push(['Project timing', tPts]);
+
+  const fPts = LEAD_SCORE.financing[financing] || 0;
+  score += fPts; breakdown.push(['Financing preference', fPts]);
+
+  const rPts = LEAD_SCORE.role[role] || 0;
+  score += rPts; breakdown.push(['Evaluator role', rPts]);
+
+  const reasonCount = (reasons || []).length;
+  const reasonPts = Math.min(LEAD_SCORE.reasonPointMax, reasonCount * LEAD_SCORE.reasonPointEach);
+  score += reasonPts; breakdown.push(['Stated reasons (' + reasonCount + ')', reasonPts]);
+
+  let priority;
+  if (score >= LEAD_SCORE.thresholds.hot) priority = 'hot';
+  else if (score >= LEAD_SCORE.thresholds.warm) priority = 'warm';
+  else priority = 'cold';
+
+  return { score, priority, breakdown };
+}
+
+/* ============================================================
+   SAVINGS CALCULATION
+   ============================================================ */
+function computeQuestionnaireSavings() {
+  if (state.result.tier === 'notfit') {
+    state.questionnaireSavings = null;
+    return;
+  }
+  const a = state.answers;
+  const fac = FACILITY_TYPES[a.q3_facility];
+  const rates = RATES_BY_STATE[a.q2_state] || RATES_NATIONAL;
+  const productKey = selectProduct(a);
+  const product = PRODUCTS[productKey];
+
+  // Derive default electric utilization from bill (clamped 50-100%). If "not sure",
+  // assume 100%. This prevents undersized sites from being modeled as if they
+  // could absorb full CHP output, which would inflate fuel cost vs savings.
+  let defaultElecUtil = SAVINGS_CONST.defaultElecUtil;
+  if (a.q4_elec_bill !== 'not_sure') {
+    const monthly = billValueToMonthly(a.q4_elec_bill, 'elec');
+    const estAnnualKWh = (monthly * 12) / rates.elecRate;
+    const grossCHPKWh  = product.outputKW * fac.runHours;
+    if (grossCHPKWh > 0) {
+      defaultElecUtil = Math.max(0.5, Math.min(1.0, estAnnualKWh / grossCHPKWh));
+    }
+  }
+
+  const inputs = {
+    productKey:     productKey,
+    runHours:       fac.runHours,
+    elecUtil:       defaultElecUtil,
+    thermalUtil:    Math.max(0, Math.min(1, fac.thermalUtilBase * THERMAL_DEMAND_MODIFIER[a.q6_thermal])),
+    boilerEff:      SAVINGS_CONST.defaultBoilerEff,
+    elecRate:       rates.elecRate,
+    gasRate:        rates.gasRate,
+    annualElecBill: billValueToMonthly(a.q4_elec_bill, 'elec') * 12,
+    annualFuelBill: billValueToMonthly(a.q5_fuel_bill, 'fuel') * 12,
+    annualKWh:      null
+  };
+
+  state.questionnaireSavings = {
+    inputs: inputs,
+    result: calculateSavings(inputs)
+  };
+  state.editedValues = JSON.parse(JSON.stringify(inputs));
+}
+
+function calculateSavings(i) {
+  const p = PRODUCTS[i.productKey];
+
+  // Electric output
+  const annualKWhGross = p.outputKW * i.runHours;
+  const usableKWh      = annualKWhGross * i.elecUtil;
+
+  // Load-follow: fuel and heat scale with electric output. When the engine
+  // dials back to match site load, fuel input and heat output both drop
+  // proportionally. This is the E-series operating mode.
+  const annualFuelTherms = p.fuelThermsPerHr * i.runHours * i.elecUtil;
+  const annualHeatBtu    = p.heatBtuHr * i.runHours * i.elecUtil * i.thermalUtil;
+  const boilerThermsDisp = annualHeatBtu / SAVINGS_CONST.btuPerTherm / i.boilerEff;
+
+  const rawElecSavings = usableKWh * i.elecRate;
+  const elecSavings    = Math.min(rawElecSavings, i.annualElecBill);
+  const elecCapped     = rawElecSavings > i.annualElecBill;
+
+  const rawHeatSavings = boilerThermsDisp * i.gasRate;
+  const heatSavings    = Math.min(rawHeatSavings, i.annualFuelBill);
+  const heatCapped     = rawHeatSavings > i.annualFuelBill;
+
+  const chpFuelCost = annualFuelTherms * i.gasRate;
+  const omCost      = usableKWh * SAVINGS_CONST.omPerKWh;
+
+  const net  = elecSavings + heatSavings - chpFuelCost - omCost;
+  const low  = Math.max(0, net * (1 - SAVINGS_CONST.rangePct));
+  const mid  = Math.max(0, net);
+  const high = Math.max(0, net * (1 + SAVINGS_CONST.rangePct));
+
+  return {
+    annualKWhGross, usableKWh, annualFuelTherms,
+    boilerThermsDisp, elecSavings, heatSavings,
+    elecCapped, heatCapped, chpFuelCost, omCost,
+    netSavings: net, low, mid, high
+  };
+}
+
+function applySavingsDemotion() {
+  if (!state.questionnaireSavings) return;
+  if (state.result.tier === 'strong' &&
+      state.questionnaireSavings.result.mid < SAVINGS_DEMOTION_FLOOR) {
+    state.result.tier = 'potential';
+    state.result.demoted = true;
+  }
+}
+
+/* ============================================================
+   RESULT RENDERING
+   ============================================================ */
+const TIER_META = {
+  strong:    { label: 'Strong Initial Fit', cls: 'tier-strong' },
+  potential: { label: 'Potential Fit',      cls: 'tier-potential' },
+  review:    { label: 'Needs More Review',  cls: 'tier-review' },
+  notfit:    { label: 'Likely Not a Fit',   cls: 'tier-notfit' }
+};
+
+function renderResult() {
+  const r = state.result;
+  const a = state.answers;
+  const meta = TIER_META[r.tier];
+
+  // Badge
+  const badge = document.getElementById('tierBadge');
+  badge.className = 'tier-badge ' + meta.cls;
+  badge.textContent = meta.label;
+
+  // Headline + body
+  const facLabel = FACILITY_TYPES[a.q3_facility].label.toLowerCase();
+  const thermLabel = (function() {
+    switch(a.q6_thermal) {
+      case 'yes': return 'consistent year-round thermal demand';
+      case 'mostly': return 'mostly year-round thermal demand';
+      case 'seasonal': return 'mainly seasonal thermal demand';
+      case 'limited': return 'limited thermal demand';
+      default: return 'unclear thermal demand';
+    }
+  })();
+  const elecBillText = billLabel(a.q4_elec_bill);
+  const stateName = (STATES.find(s => s[0] === a.q2_state) || ['', a.q2_state])[1];
+
+  let headline, body;
+
+  if (r.tier === 'notfit' && r.reason === 'no_gas') {
+    headline = 'Natural gas is required';
+    body = 'CHP systems run on natural gas. A site without gas service is not a fit for our current product line. If service becomes available, or if you operate other facilities that have gas, we still want to hear from you.';
+  } else if (r.reason === 'small_load_e100_watch') {
+    headline = 'Smaller than the E|200 range, but the E|100 is coming';
+    body = 'Your monthly electric bill suggests a base load smaller than what the E|200 (180 kW) serves efficiently. The E|100, a 100 kW unit launching in late 2026, is sized for facilities like yours. Submit your information and we will reach out as that product approaches availability.';
+  } else if (r.reason === 'above_e200_range') {
+    headline = 'Above the single-unit range, multi-unit configuration likely';
+    body = 'Your ' + elecBillText + ' monthly electric bill points to a load that benefits from multiple E|200 units in parallel. The savings shown below model a single unit. Application Engineering will determine the optimal unit count and total savings during follow-up.';
+  } else if (r.reason === 'gas_not_yet_connected') {
+    headline = 'Gas is nearby, but not yet at your meter';
+    body = 'Service availability at the street means CHP is technically possible at your site. The cost and timeline to bring service onto the property is the next variable to work through. Submit your information so we can discuss whether the interconnection economics work for your project.';
+  } else if (r.tier === 'strong') {
+    headline = 'Strong initial fit';
+    body = 'Your operating profile matches sites where Enginuity CHP installations perform well. A ' + facLabel + ' in ' + stateName + ' with ' + thermLabel + ' and a ' + elecBillText + ' monthly electric bill all point in the right direction. The next step is a conversation with Application Engineering to confirm sizing and integration.';
+  } else if (r.tier === 'potential') {
+    if (r.demoted) {
+      headline = 'Potential fit, but local rates limit the upside';
+      body = 'Structurally your facility looks like a CHP candidate, but the energy rates in ' + stateName + ' produce a modest savings projection at our default assumptions. There may be tariff details, demand charges, or incentives we have not modeled that change the picture. A short call with Application Engineering will determine whether the project economics work.';
+    } else {
+      headline = 'Potential fit';
+      body = 'Your facility shows several promising signals for CHP. A few details still need to be confirmed before we can size a system. We would like to ask a few follow-up questions before recommending next steps.';
+    }
+  } else if (r.tier === 'review') {
+    headline = 'Needs more review';
+    body = 'Your answers show a mixed signal. Some indicators line up with a successful CHP installation while others do not. A short qualifying call is the best next step to figure out where the project actually lands.';
+  } else {
+    headline = 'Likely not a fit today';
+    body = 'Based on your answers, your facility profile does not align with the operating conditions where CHP performs well. This may change as your operations evolve or as our product line expands. We would still like to keep you informed.';
+  }
+
+  document.getElementById('resultHeadline').textContent = headline;
+  document.getElementById('resultBody').textContent = body;
+
+  // Savings card
+  const card = document.getElementById('savingsCard');
+  if (r.tier === 'notfit') {
+    card.style.display = 'none';
+  } else {
+    card.style.display = 'block';
+    setupSavingsPanel();
+  }
+
+  // Signals
+  renderSignals();
+}
+
+function setupSavingsPanel() {
+  const q = state.questionnaireSavings;
+  if (!q) return;
+  const i = q.inputs;
+
+  // Model line is set inside renderSavingsDisplay (handles product flips, launch caveat).
+
+  // Populate refine inputs with defaults
+  document.getElementById('ref_kwh').value = '';
+  document.getElementById('ref_elec').value = i.elecRate.toFixed(3);
+  document.getElementById('ref_gas').value  = i.gasRate.toFixed(2);
+  document.getElementById('ref_boiler').value = Math.round(i.boilerEff * 100);
+  document.getElementById('ref_hours').value = i.runHours;
+  document.getElementById('ref_eutil').value = Math.round(i.elecUtil * 100);
+  document.getElementById('ref_tutil').value = Math.round(i.thermalUtil * 100);
+
+  // Rate help text
+  const stateName = (STATES.find(s => s[0] === state.answers.q2_state) || ['', ''])[1];
+  document.getElementById('elecRateHelp').textContent = 'EIA average for ' + stateName;
+  document.getElementById('gasRateHelp').textContent = 'EIA average for ' + stateName;
+
+  // Listeners
+  ['ref_kwh','ref_elec','ref_gas','ref_boiler','ref_hours','ref_eutil','ref_tutil'].forEach(id => {
+    const el = document.getElementById(id);
+    el.oninput = onRefineInput;
+    el.onchange = onRefineInput;
+  });
+
+  state.userEdited = false;
+  renderSavingsDisplay(q.result, i, false);
+}
+
+function onRefineInput() {
+  // Read all inputs, clamp, recompute
+  const c = SAVINGS_CONST;
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  const elecRate = clamp(parseFloat(document.getElementById('ref_elec').value) || 0, c.elecRateMin, c.elecRateMax);
+  const gasRate  = clamp(parseFloat(document.getElementById('ref_gas').value)  || 0, c.gasRateMin,  c.gasRateMax);
+  const boilerEff = clamp(parseInt(document.getElementById('ref_boiler').value, 10) || 80, c.boilerEffMin, c.boilerEffMax) / 100;
+  const runHours = clamp(parseInt(document.getElementById('ref_hours').value, 10) || 0, c.runHoursMin, c.runHoursMax);
+  const elecUtil = clamp(parseInt(document.getElementById('ref_eutil').value, 10) || 0, c.elecUtilMin, c.elecUtilMax) / 100;
+  const thermalUtil = clamp(parseInt(document.getElementById('ref_tutil').value, 10) || 0, c.thermalUtilMin, c.thermalUtilMax) / 100;
+  const kwhInput = parseFloat(document.getElementById('ref_kwh').value) || null;
+
+  const baseInputs = state.questionnaireSavings.inputs;
+
+  // Tentative editedValues for product re-evaluation
+  const tentativeEdits = { runHours, annualKWh: kwhInput };
+  const productKey = selectProduct(state.answers, tentativeEdits);
+
+  // If annual kWh provided, compute implied utilization (capped at 100%)
+  let derivedElecUtil = elecUtil;
+  if (kwhInput && kwhInput > 0) {
+    const product = PRODUCTS[productKey];
+    const grossKWh = product.outputKW * runHours;
+    const impliedUtil = Math.min(1, kwhInput / grossKWh);
+    // If user hasn't manually overridden elecUtil from default, use the implied one
+    if (Math.abs(elecUtil - (state.editedValues.elecUtil || baseInputs.elecUtil)) < 0.001) {
+      derivedElecUtil = impliedUtil;
+    }
+  }
+
+  state.editedValues = {
+    productKey: productKey,
+    runHours, elecUtil: derivedElecUtil, thermalUtil,
+    boilerEff, elecRate, gasRate,
+    annualElecBill: baseInputs.annualElecBill,
+    annualFuelBill: baseInputs.annualFuelBill,
+    annualKWh: kwhInput
+  };
+
+  // Mark edited fields
+  const orig = baseInputs;
+  toggleMod('mod_kwh',    kwhInput !== null && kwhInput > 0);
+  toggleMod('mod_elec',   Math.abs(elecRate - orig.elecRate) > 0.0001);
+  toggleMod('mod_gas',    Math.abs(gasRate - orig.gasRate) > 0.001);
+  toggleMod('mod_boiler', Math.abs(boilerEff - orig.boilerEff) > 0.001);
+  toggleMod('mod_hours',  runHours !== orig.runHours);
+  toggleMod('mod_eutil',  Math.abs(derivedElecUtil - orig.elecUtil) > 0.001);
+  toggleMod('mod_tutil',  Math.abs(thermalUtil - orig.thermalUtil) > 0.001);
+
+  const anyEdit = ['mod_kwh','mod_elec','mod_gas','mod_boiler','mod_hours','mod_eutil','mod_tutil']
+    .some(id => document.getElementById(id).style.display !== 'none');
+  state.userEdited = anyEdit;
+
+  const result = calculateSavings(state.editedValues);
+  renderSavingsDisplay(result, state.editedValues, anyEdit);
+  updateDebug();
+}
+
+function toggleMod(id, isModified) {
+  document.getElementById(id).style.display = isModified ? 'inline' : 'none';
+}
+
+function renderSavingsDisplay(r, i, isEdited) {
+  const breakdownEl = document.getElementById('savingsBreakdown');
+  const resultEl = document.getElementById('savingsResult');
+  const noteEl = document.getElementById('savingsNote');
+
+  // Update the model line in case product selection changed
+  const product = PRODUCTS[i.productKey];
+  const modelLineEl = document.getElementById('savingsModelLine');
+  if (modelLineEl) {
+    let line = 'Modeled on the ' + product.name + ' at ' + product.outputKW + ' kW';
+    if (product.status === 'planned_2026') {
+      line += ' (launching late 2026)';
+    }
+    modelLineEl.textContent = line;
+  }
+
+  breakdownEl.innerHTML =
+    '<div class="savings-row"><span class="savings-row-key">Electricity offset</span>' +
+    '<span class="savings-row-val pos">+ ' + fmtMoney(r.elecSavings) + '</span></div>' +
+    '<div class="savings-row"><span class="savings-row-key">Recovered heat value</span>' +
+    '<span class="savings-row-val pos">+ ' + fmtMoney(r.heatSavings) + '</span></div>' +
+    '<div class="savings-row"><span class="savings-row-key">CHP natural gas fuel</span>' +
+    '<span class="savings-row-val neg">- ' + fmtMoney(r.chpFuelCost) + '</span></div>' +
+    '<div class="savings-row"><span class="savings-row-key">Operations &amp; maintenance</span>' +
+    '<span class="savings-row-val neg">- ' + fmtMoney(r.omCost) + '</span></div>' +
+    '<div class="savings-row total"><span class="savings-row-key">Net annual savings (midpoint)</span>' +
+    '<span class="savings-row-val">' + fmtMoney(r.mid) + '</span></div>';
+
+  if (r.mid > 1000) {
+    resultEl.innerHTML =
+      '<div class="savings-result-label">Indicative range, per year</div>' +
+      '<div class="savings-figure">' + fmtMoney(r.low) + ' – ' + fmtMoney(r.high) + '</div>' +
+      '<div class="savings-figure-sub">±25% band around the modeled midpoint, single unit</div>';
+  } else {
+    resultEl.innerHTML =
+      '<div class="savings-thin">At these rates and utilization, the model does <strong>not show clear annual savings</strong>. CHP economics depend on the spark spread between electricity and gas rates and on how much recovered heat the facility actually uses. Application Engineering can model this precisely with your bills in hand.</div>';
+  }
+
+  let notes = [];
+  if (r.elecCapped) notes.push('Electricity savings capped by your stated electric bill.');
+  if (r.heatCapped) notes.push('Heat savings capped by your stated gas bill.');
+  // Multi-unit hint when bill is large enough to support more than one unit
+  const monthlyElec = billValueToMonthly(state.answers.q4_elec_bill, 'elec');
+  if (monthlyElec >= 40000 && i.productKey === 'e200' && !r.elecCapped) {
+    notes.push('Single-unit estimate. Multi-unit configurations may add proportional savings; Application Engineering will size the optimal unit count.');
+  }
+  if (product.status === 'planned_2026') {
+    notes.push('The ' + product.name + ' is launching in late 2026. Submit your information to be notified when units become available.');
+  }
+  if (isEdited) notes.push('Values reflect your edits. Submit will ask whether to send these or the questionnaire defaults.');
+  noteEl.innerHTML = notes.join(' ');
+}
+
+function fmtMoney(n) {
+  const rounded = Math.round(n / 1000) * 1000;
+  return '$' + rounded.toLocaleString('en-US');
+}
+
+function renderSignals() {
+  const a = state.answers;
+  const stateName = (STATES.find(s => s[0] === a.q2_state) || ['', a.q2_state])[1];
+  const summary = [
+    ['Gas availability',   GAS_AVAIL[a.q1_gas].label],
+    ['Facility state',     stateName],
+    ['Facility type',      FACILITY_TYPES[a.q3_facility].label],
+    ['Monthly electric',   billLabel(a.q4_elec_bill)],
+    ['Monthly gas',        billLabel(a.q5_fuel_bill)],
+    ['Thermal demand',     QUESTIONS.find(q => q.id === 'q6_thermal').options.find(o => o.v === a.q6_thermal).l]
+  ];
+  const el = document.getElementById('resultSignals');
+  el.innerHTML = summary.map(([k, v]) =>
+    '<div class="signal-row"><span class="signal-key">' + k + '</span><span class="signal-val">' + v + '</span></div>'
+  ).join('');
+}
+
+/* ============================================================
+   LEAD FORM
+   ============================================================ */
+function proceedToLead() {
+  // Pre-fill state
+  const stateName = (STATES.find(s => s[0] === state.answers.q2_state) || ['', ''])[1];
+  document.getElementById('leadState').value = stateName + ' (' + state.answers.q2_state + ')';
+
+  // Facility dropdown
+  const facSel = document.getElementById('leadFacility');
+  facSel.innerHTML = '<option value="">Select...</option>' +
+    Object.entries(FACILITY_TYPES).map(([v, o]) =>
+      '<option value="' + v + '"' + (v === state.answers.q3_facility ? ' selected' : '') + '>' + o.label + '</option>'
+    ).join('');
+
+  // Timing dropdown
+  const timingSel = document.getElementById('leadTiming');
+  timingSel.innerHTML = '<option value="">Select...</option>' +
+    Object.entries(TIMING).map(([v, o]) =>
+      '<option value="' + v + '">' + o.label + '</option>'
+    ).join('');
+
+  // Financing
+  const finSel = document.getElementById('leadFinancing');
+  finSel.innerHTML = '<option value="">Select...</option>' +
+    FINANCING.map(o => '<option value="' + o.v + '">' + o.l + '</option>').join('');
+
+  // Role
+  const roleSel = document.getElementById('leadRole');
+  roleSel.innerHTML = '<option value="">Select...</option>' +
+    ROLES.map(o => '<option value="' + o.v + '">' + o.l + '</option>').join('');
+
+  // Reason checklist
+  const checklist = document.getElementById('reasonChecklist');
+  checklist.innerHTML = REASON_FOR_INTEREST.map(o =>
+    '<label class="form-check"><input type="checkbox" name="reason" value="' + o.v + '">' + o.l + '</label>'
+  ).join('');
+  checklist.querySelectorAll('input').forEach(input => {
+    input.onchange = function() {
+      this.parentElement.classList.toggle('selected', this.checked);
+    };
+  });
+
+  // Radio styling
+  document.querySelectorAll('.form-radio input').forEach(r => {
+    r.onchange = function() {
+      document.querySelectorAll('.form-radio').forEach(el => el.classList.remove('selected'));
+      if (this.checked) this.parentElement.classList.add('selected');
+    };
+  });
+
+  showScreen('screen-lead');
+}
+
+function handleSubmit() {
+  // Validate
+  const required = ['leadName', 'leadCompany', 'leadEmail', 'leadCity', 'leadFacility', 'leadTiming', 'leadFinancing', 'leadRole'];
+  for (const id of required) {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      el.focus();
+      el.style.borderColor = 'var(--green-deep)';
+      setTimeout(() => el.style.borderColor = '', 2000);
+      return;
+    }
+  }
+  const followup = document.querySelector('input[name="followup"]:checked');
+  if (!followup) { alert('Please select a preferred follow-up method.'); return; }
+  if (!document.getElementById('leadConsent').checked) {
+    alert('Please agree to be contacted to submit.');
+    return;
+  }
+
+  // If user edited Phase 2 values, ask which set to submit
+  if (state.userEdited && state.result.tier !== 'notfit') {
+    showSubmitModal();
+  } else {
+    state.submissionBasis = 'questionnaire';
+    finalizeSubmit();
+  }
+}
+
+function showSubmitModal() {
+  const q = state.questionnaireSavings.result;
+  const e = calculateSavings(state.editedValues);
+  document.getElementById('modalDefaultSummary').textContent =
+    'Midpoint: ' + fmtMoney(q.mid) + ' (range ' + fmtMoney(q.low) + ' – ' + fmtMoney(q.high) + ')';
+  document.getElementById('modalEditedSummary').textContent =
+    'Midpoint: ' + fmtMoney(e.mid) + ' (range ' + fmtMoney(e.low) + ' – ' + fmtMoney(e.high) + ')';
+  document.getElementById('submitModal').classList.add('open');
+}
+
+function closeSubmitModal() {
+  document.getElementById('submitModal').classList.remove('open');
+}
+
+function confirmSubmit(basis) {
+  state.submissionBasis = basis;
+  closeSubmitModal();
+  finalizeSubmit();
+}
+
+function finalizeSubmit() {
+  const q = state.questionnaireSavings;
+  const eVals = state.editedValues;
+  const eResult = eVals ? calculateSavings(eVals) : null;
+
+  const reasons = Array.from(document.querySelectorAll('input[name="reason"]:checked')).map(r => r.value);
+  const timing    = document.getElementById('leadTiming').value;
+  const financing = document.getElementById('leadFinancing').value;
+  const role      = document.getElementById('leadRole').value;
+
+  // Internal lead score (sales prioritization, not shown to user)
+  const lead = computeLeadScore(timing, financing, role, reasons);
+
+  const payload = {
+    // Contact
+    name:          document.getElementById('leadName').value,
+    company:       document.getElementById('leadCompany').value,
+    email:         document.getElementById('leadEmail').value,
+    phone:         document.getElementById('leadPhone').value,
+    city:          document.getElementById('leadCity').value,
+    state:         state.answers.q2_state,
+
+    // Screening
+    chp_screening_tier:        state.result.tier,
+    chp_screening_reason_code: state.result.reason,
+    chp_screening_score:       state.result.score,
+    chp_screening_raw_answers: JSON.stringify(state.answers),
+
+    // Questionnaire defaults (what the tool calculated initially)
+    chp_questionnaire_run_hours:   q ? q.inputs.runHours : null,
+    chp_questionnaire_elec_util:   q ? q.inputs.elecUtil : null,
+    chp_questionnaire_thermal_util: q ? q.inputs.thermalUtil : null,
+    chp_questionnaire_elec_rate:   q ? q.inputs.elecRate : null,
+    chp_questionnaire_gas_rate:    q ? q.inputs.gasRate : null,
+    chp_questionnaire_boiler_eff:  q ? q.inputs.boilerEff : null,
+    chp_questionnaire_savings_low:  q ? Math.round(q.result.low) : null,
+    chp_questionnaire_savings_mid:  q ? Math.round(q.result.mid) : null,
+    chp_questionnaire_savings_high: q ? Math.round(q.result.high) : null,
+
+    // User-edited values
+    chp_submitted_run_hours:   eVals ? eVals.runHours : null,
+    chp_submitted_elec_util:   eVals ? eVals.elecUtil : null,
+    chp_submitted_thermal_util: eVals ? eVals.thermalUtil : null,
+    chp_submitted_elec_rate:   eVals ? eVals.elecRate : null,
+    chp_submitted_gas_rate:    eVals ? eVals.gasRate : null,
+    chp_submitted_boiler_eff:  eVals ? eVals.boilerEff : null,
+    chp_submitted_annual_kwh:  eVals ? eVals.annualKWh : null,
+    chp_submitted_savings_low:  eResult ? Math.round(eResult.low) : null,
+    chp_submitted_savings_mid:  eResult ? Math.round(eResult.mid) : null,
+    chp_submitted_savings_high: eResult ? Math.round(eResult.high) : null,
+
+    chp_submission_basis: state.submissionBasis,
+
+    // Marketing/sales
+    reason_for_interest:    reasons,
+    financing_preference:   financing,
+    evaluator_role:         role,
+    project_description:    document.getElementById('leadDesc').value,
+    preferred_followup:     document.querySelector('input[name="followup"]:checked').value,
+    facility_type:          document.getElementById('leadFacility').value,
+    project_timing:         timing,
+
+    // Internal lead score (not shown to user, used for sales prioritization)
+    lead_score:             lead.score,
+    lead_priority:          lead.priority,
+    lead_score_breakdown:   JSON.stringify(lead.breakdown),
+
+    // System
+    submitted_at: new Date().toISOString(),
+    source_url:   window.location.href,
+    data_vintage: RATES_VINTAGE
+  };
+
+  // In production: HubSpot Forms API POST
+  // fetch('https://api.hsforms.com/submissions/v3/integration/submit/{portalId}/{formGuid}', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ fields: Object.entries(payload).map(([n, v]) => ({ name: n, value: v })) })
+  // });
+  console.log('[DEMO] HubSpot submission payload:', payload);
+
+  renderConfirmation();
+  showScreen('screen-confirm');
+}
+
+function renderConfirmation() {
+  const t = state.result.tier;
+  const r = state.result.reason;
+
+  let sub, next = [];
+
+  if (t === 'strong') {
+    sub = 'Your facility looks like a Strong Initial Fit. Inside Sales will reach out within one business day to schedule a conversation.';
+    next = [
+      'Inside Sales will call you within 1 business day',
+      'Application Engineering will join the second call to discuss sizing and integration',
+      'We will request 12 months of electric and gas utility bills before that conversation'
+    ];
+  } else if (t === 'potential') {
+    sub = 'Your facility shows a Potential Fit. Application Engineering will follow up within two business days.';
+    next = [
+      'Application Engineering will email qualifying questions within 2 business days',
+      'A phone follow-up will be scheduled once we have the basics',
+      'You can attach utility bills or building details if you have them handy'
+    ];
+  } else if (t === 'review') {
+    sub = 'Your facility needs a closer look. We will schedule a short qualifying call within three business days.';
+    next = [
+      'Inside Sales will schedule a short qualifying call within 3 business days',
+      'We will clarify the items we could not score from your screening answers',
+      'No utility bills are required for this first conversation'
+    ];
+  } else {
+    sub = 'Based on your answers, your site is not aligned with CHP today. We will keep you informed as products and conditions evolve.';
+    next = [
+      'You will receive an acknowledgment email within 5 minutes',
+      r === 'small_load_e100_watch'
+        ? 'You have been added to the E|100 launch announcement list'
+        : 'You will receive quarterly product updates and roadmap announcements',
+      'If your operations or site conditions change, reply to that email any time'
+    ];
+  }
+
+  document.getElementById('confirmSub').textContent = sub;
+  document.getElementById('confirmNext').innerHTML =
+    next.map(item => '<div class="confirm-next-item">' + item + '</div>').join('');
+}
+
+/* ============================================================
+   DEBUG
+   ============================================================ */
+function toggleDebug() {
+  document.getElementById('debugPanel').classList.toggle('open');
+  updateDebug();
+}
+
+function updateDebug() {
+  const panel = document.getElementById('debugPanel');
+  if (!panel.classList.contains('open')) return;
+  const a = state.answers;
+  const preview = Object.keys(a).length === 7 ? scoreFacility(a) : null;
+
+  let html = '<div class="debug-title">Current step</div>';
+  html += '<div class="debug-row"><span class="debug-key">Step</span><span class="debug-val">' +
+          (state.step + 1) + ' / ' + QUESTIONS.length + '</span></div>';
+
+  html += '<div class="debug-section debug-title">Answers</div>';
+  QUESTIONS.forEach(q => {
+    const v = a[q.id];
+    html += '<div class="debug-row"><span class="debug-key">' + q.id +
+            '</span><span class="debug-val">' + (v == null ? '—' : (Array.isArray(v) ? v.join(',') : v)) + '</span></div>';
+  });
+
+  if (preview) {
+    html += '<div class="debug-section debug-title">Preview score</div>';
+    preview.breakdown.forEach(([k, p]) => {
+      html += '<div class="debug-row"><span class="debug-key">' + k +
+              '</span><span class="debug-val">' + (p >= 0 ? '+' : '') + p + '</span></div>';
+    });
+    html += '<div class="debug-row"><span class="debug-key">TOTAL</span><span class="debug-val">' +
+            preview.score + '</span></div>';
+    html += '<div class="debug-row"><span class="debug-key">Tier</span><span class="debug-val">' +
+            preview.tier + (preview.reason ? ' (' + preview.reason + ')' : '') + '</span></div>';
+  }
+
+  if (state.editedValues) {
+    const e = state.editedValues;
+    const r = calculateSavings(e);
+    html += '<div class="debug-section debug-title">Current savings</div>';
+    html += '<div class="debug-row"><span class="debug-key">Hours</span><span class="debug-val">' + e.runHours + '</span></div>';
+    html += '<div class="debug-row"><span class="debug-key">E-util</span><span class="debug-val">' + Math.round(e.elecUtil*100) + '%</span></div>';
+    html += '<div class="debug-row"><span class="debug-key">T-util</span><span class="debug-val">' + Math.round(e.thermalUtil*100) + '%</span></div>';
+    html += '<div class="debug-row"><span class="debug-key">Elec rate</span><span class="debug-val">$' + e.elecRate.toFixed(3) + '</span></div>';
+    html += '<div class="debug-row"><span class="debug-key">Gas rate</span><span class="debug-val">$' + e.gasRate.toFixed(2) + '</span></div>';
+    html += '<div class="debug-row"><span class="debug-key">Mid</span><span class="debug-val">' + fmtMoney(r.mid) + '</span></div>';
+    html += '<div class="debug-row"><span class="debug-key">Edited</span><span class="debug-val">' + state.userEdited + '</span></div>';
+  }
+
+  // Lead score preview from lead form (if lead form has been touched)
+  const tEl = document.getElementById('leadTiming');
+  const fEl = document.getElementById('leadFinancing');
+  const rEl = document.getElementById('leadRole');
+  if (tEl && tEl.value && fEl && fEl.value && rEl && rEl.value) {
+    const reasons = Array.from(document.querySelectorAll('input[name="reason"]:checked')).map(r => r.value);
+    const lead = computeLeadScore(tEl.value, fEl.value, rEl.value, reasons);
+    html += '<div class="debug-section debug-title">Internal lead score</div>';
+    lead.breakdown.forEach(([k, p]) => {
+      html += '<div class="debug-row"><span class="debug-key">' + k +
+              '</span><span class="debug-val">' + (p >= 0 ? '+' : '') + p + '</span></div>';
+    });
+    html += '<div class="debug-row"><span class="debug-key">TOTAL</span><span class="debug-val">' +
+            lead.score + '</span></div>';
+    html += '<div class="debug-row"><span class="debug-key">Priority</span><span class="debug-val">' +
+            lead.priority.toUpperCase() + '</span></div>';
+  }
+  panel.innerHTML = html;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', function() {
+  // Nothing to do on load. User clicks Start screening to begin.
+});
+</script>
+
+</body>
+</html>
